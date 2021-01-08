@@ -1,0 +1,353 @@
+**Create Tables in SQL Plus as given below**
+
+=============================================
+EMPLOYEE
+=============================================
+Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL NUMBER(6)
+ EMP_NAME                                  NOT NULL VARCHAR2(30)
+ EMP_USERNAME                              NOT NULL VARCHAR2(30)
+ EMP_PASSWORD                              NOT NULL VARCHAR2(30)
+ EMP_JOB                                   NOT NULL VARCHAR2(20)
+
+============================================
+CUSTOMER
+============================================
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUS_ID                                    NOT NULL NUMBER(6)
+ CUS_NAME                                  NOT NULL VARCHAR2(30)
+ CUS_CONTACT                               NOT NULL VARCHAR2(10)
+ CUS_SALARY                                         FLOAT(8)
+ CUS_USERNAME                              NOT NULL VARCHAR2(30)
+ CUS_PASSWORD                              NOT NULL VARCHAR2(30)
+ CUS_AADHAR                                         VARCHAR2(12)
+ CUS_BANKACC                                        VARCHAR2(15)
+ CUS_PAN                                            VARCHAR2(20)
+ CUS_VEHICLE                                        VARCHAR2(30)
+ CUS_OCC                                            VARCHAR2(20)
+
+==============================================
+CUSTADDRESS
+==============================================
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUS_ID                                             NUMBER(6)
+ HOUSE_NO                                  NOT NULL VARCHAR2(30)
+ BUILDING                                  NOT NULL VARCHAR2(30)
+ PLACE                                     NOT NULL VARCHAR2(30)
+ CITY                                      NOT NULL VARCHAR2(30)
+ STATE                                     NOT NULL VARCHAR2(30)
+ PIN                                                VARCHAR2(7)
+
+================================================
+LOAN
+================================================
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ LOAN_ID                                   NOT NULL NUMBER(3)
+ LOAN_NAME                                 NOT NULL VARCHAR2(20)
+ LOAN_TYPE                                 NOT NULL VARCHAR2(15)
+ LOAN_RATE                                 NOT NULL VARCHAR2(10)
+ LOAN_TERM                                 NOT NULL NUMBER(3)
+ LOAN_DOWNPAY                              NOT NULL FLOAT(9)
+ LOAN_PRINCIPAL                            NOT NULL VARCHAR2(40)
+
+=================================================
+APPLICATION
+=================================================
+
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ APP_ID                                    NOT NULL NUMBER(4)
+ CUS_ID                                    NOT NULL NUMBER(6)
+ CUS_NAME                                  NOT NULL VARCHAR2(30)
+ LOAN_ID                                   NOT NULL NUMBER(3)
+ LOAN_NAME                                 NOT NULL VARCHAR2(20)
+ PRINCIPAL                                 NOT NULL FLOAT(9)
+ RATE                                      NOT NULL FLOAT(4)
+ TERM                                      NOT NULL NUMBER(3)
+ STATUS                                    NOT NULL VARCHAR2(10)
+ CAR_NAME                                  NOT NULL VARCHAR2(20)
+ CAR_TYPE                                  NOT NULL VARCHAR2(20)
+ LOAN_DOWNPAY                              NOT NULL FLOAT(6)
+
+=================================================
+STATUS
+=================================================
+
+Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ APP_ID                                    NOT NULL NUMBER(4)
+ CUS_ID                                    NOT NULL NUMBER(6)
+ LOAN_ID                                   NOT NULL NUMBER(3)
+ PRINCIPAL                                 NOT NULL FLOAT(9)
+ RATE                                      NOT NULL FLOAT(4)
+ TERM                                      NOT NULL NUMBER(3)
+ EMI                                                FLOAT(9)
+ LAST_MONTH_EMI_PAID                                VARCHAR2(3)
+ TOTAL_PAID_BACK                                    FLOAT(9)
+ TERM_LEFT                                          NUMBER(3)
+ TOTAL_PAYABLE_AMOUNT                               FLOAT(9)
+ TOTAL_PAYABLE_LEFT                                 FLOAT(9)
+ 
+ 
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**Create Stored Procedures as given below:**
+
+============================================================================================================
+STORED PROCEDURE TO UPDATE LOAN AMOUNT
+============================================================================================================
+CREATE OR REPLACE PROCEDURE UPDATELOANAMOUNT(PRINCI LOAN.LOAN_PRINCIPAL%TYPE,LO_ID LOAN.LOAN_ID%TYPE)
+AS 
+BEGIN
+UPDATE LOAN SET LOAN_PRINCIPAL = PRINCI WHERE LOAN_ID = LO_ID;
+COMMIT;
+END;
+/
+
+============================================================================================================
+STORED PROCEDURE TO UPDATE LOAN ROI
+============================================================================================================
+CREATE OR REPLACE PROCEDURE UPDATELOANROI(ROI LOAN.LOAN_RATE%TYPE,LO_ID LOAN.LOAN_ID%TYPE)
+AS 
+BEGIN
+UPDATE LOAN SET LOAN_RATE = ROI WHERE LOAN_ID = LO_ID;
+COMMIT;
+END;
+/
+
+============================================================================================================
+STORED PROCEDURE TO UPDATE LOAN TERM
+============================================================================================================
+CREATE OR REPLACE PROCEDURE UPDATELOANTERM(TERM LOAN.LOAN_TERM%TYPE,LO_ID LOAN.LOAN_ID%TYPE)
+AS 
+BEGIN
+UPDATE LOAN SET LOAN_TERM = TERM WHERE LOAN_ID = LO_ID;
+COMMIT;
+END;
+/
+
+============================================================================================================
+STORED PROCEDURE TO UPDATE LOAN DOWN PAYMENT
+============================================================================================================
+CREATE OR REPLACE PROCEDURE UPDATELOANDOWNPAY(DOWN_PAY LOAN.LOAN_DOWNPAY%TYPE,LO_ID LOAN.LOAN_ID%TYPE)
+AS 
+BEGIN
+UPDATE LOAN SET LOAN_DOWNPAY = DOWN_PAY WHERE LOAN_ID = LO_ID;
+COMMIT;
+END;
+/
+
+============================================================================================================
+STORED PROCEDURE FOR UPDATING STATUS AND APPLICATION TABLE
+============================================================================================================
+CREATE OR REPLACE PROCEDURE ADDLOANSTATUS(AP_ID STATUS.APP_ID%TYPE, CU_ID STATUS.CUS_ID%TYPE,LO_ID STATUS.LOAN_ID%TYPE, PRINCI STATUS.PRINCIPAL%TYPE,RAT STATUS.RATE%TYPE, TER STATUS.TERM%TYPE, EM STATUS.EMI%TYPE, LMEP STATUS.LAST_MONTH_EMI_PAID%TYPE, TPB STATUS.TOTAL_PAID_BACK%TYPE, TER_LEFT STATUS.TERM_LEFT%TYPE,TPA STATUS.TOTAL_PAYABLE_AMOUNT%TYPE, TPL STATUS.TOTAL_PAYABLE_LEFT%TYPE)
+AS 
+BEGIN
+	INSERT INTO STATUS(APP_ID, CUS_ID, LOAN_ID, PRINCIPAL, RATE, TERM, EMI, LAST_MONTH_EMI_PAID, TOTAL_PAID_BACK, TERM_LEFT, TOTAL_PAYABLE_AMOUNT, TOTAL_PAYABLE_LEFT) VALUES (AP_ID,CU_ID,LO_ID,PRINCI,RAT,TER,EM,LMEP,TPB,TER_LEFT,TPA,TPL);
+	UPDATE APPLICATION SET STATUS = 'approved' WHERE APP_ID = AP_ID;
+	commit;
+END;
+/
+
+============================================================================================================
+STORED PROCEDURE for adding address
+============================================================================================================
+CREATE OR REPLACE PROCEDURE ADDCUSTOMERADDR(CUS_ID CUSTOMER.CUS_ID%TYPE ,hno custaddress.house_no%type,build custaddress.building%type,pl custaddress.place%type, cit custaddress.city%type, stat custaddress.state%type,pinc custaddress.pin%type)
+is
+BEGIN
+	INSERT INTO CUSTADDRESS(CUS_ID,HOUSE_NO,BUILDING,PLACE,CITY,STATE,PIN) VALUES(cus_id,hno,build,pl,cit,stat,pinc);
+	commit;
+end;
+/
+
+============================================================================================================
+STORED PROCEDURE for updating address
+============================================================================================================
+CREATE OR REPLACE PROCEDURE UPDATECUSTOMERADDR(CU_ID CUSTADDRESS.CUS_ID%TYPE ,hno custaddress.house_no%type,build custaddress.building%type,pl custaddress.place%type, cit custaddress.city%type, stat custaddress.state%type,pinc custaddress.pin%type)
+is
+BEGIN
+	UPDATE CUSTADDRESS SET HOUSE_NO = HNO WHERE CUS_ID = CU_ID; 
+	UPDATE CUSTADDRESS SET BUILDING = BUILD WHERE CUS_ID = CU_ID; 
+	UPDATE CUSTADDRESS SET PLACE = PL WHERE CUS_ID = CU_ID; 
+	UPDATE CUSTADDRESS SET CITY = CIT WHERE CUS_ID = CU_ID; 
+	UPDATE CUSTADDRESS SET STATE = STAT WHERE CUS_ID = CU_ID; 
+	UPDATE CUSTADDRESS SET PIN = PINC WHERE CUS_ID = CU_ID; 
+	commit;
+end;
+/
+
+
+============================================================================================================
+STORED procedure for aadhar update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATEAADHAR(CU_ID CUSTOMER.CUS_ID%TYPE, CU_AADHAR CUSTOMER.CUS_AADHAR%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_AADHAR = CU_AADHAR WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for bankacc update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATEBANKACC(CU_ID CUSTOMER.CUS_ID%TYPE, CU_BANKACC CUSTOMER.CUS_BANKACC%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_BANKACC = CU_BANKACC WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for PAN update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATEPAN(CU_ID CUSTOMER.CUS_ID%TYPE, CU_PAN CUSTOMER.CUS_PAN%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_PAN = CU_PAN WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for CONTACT update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATECONTACT(CU_ID CUSTOMER.CUS_ID%TYPE, CU_CONTACT CUSTOMER.CUS_CONTACT%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_CONTACT = CU_CONTACT WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for SAL update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATESAL(CU_ID CUSTOMER.CUS_ID%TYPE, CU_SAL CUSTOMER.CUS_SALARY%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_SALARY = CU_SAL WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for OCC update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATEOCC(CU_ID CUSTOMER.CUS_ID%TYPE, CU_OCC CUSTOMER.CUS_OCC%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_OCC = CU_OCC WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+============================================================================================================
+STORED procedure for VEHICLE update
+============================================================================================================
+
+CREATE OR REPLACE PROCEDURE UPDATEVEHICLE(CU_ID CUSTOMER.CUS_ID%TYPE, CU_VEHICLE CUSTOMER.CUS_VEHICLE%TYPE)
+IS
+BEGIN
+	UPDATE CUSTOMER SET CUS_VEHICLE = CU_VEHICLE WHERE CUS_ID = CU_ID;
+	COMMIT;
+END;
+/
+
+update custaddress set house_no = 13 where cus_id=1000;
+
+==========================================================================================================
+STORED PROCEDURE FOR RETRIVING CUS_ID FROM APPLICATION
+==========================================================================================================
+
+CREATE OR REPLACE PROCEDURE GETCUSID(AP_ID IN APPLICATION.APP_ID%TYPE,CU_ID OUT CUSTOMER.CUS_ID%TYPE )
+AS 
+BEGIN
+SELECT CUS_ID INTO CU_ID FROM APPLICATION WHERE APP_ID = AP_ID;
+END;
+/
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+**Create Squences as given below:**
+
+===================================================
+Sequence for new Customer
+===================================================
+
+CREATE SEQUENCE customer_id_seq
+START WITH 1000
+INCREMENT BY 1
+MAXVALUE  9999
+NOCACHE
+NOCYCLE;
+
+===================================================
+Sequence for loan type
+===================================================
+
+CREATE SEQUENCE loan_id_seq
+START WITH 100
+INCREMENT BY 1
+MAXVALUE  999
+NOCACHE
+NOCYCLE;
+
+===================================================
+Sequence for loan applications
+===================================================
+
+CREATE SEQUENCE application_id_seq
+START WITH 1000
+INCREMENT BY 1
+MAXVALUE  9999
+NOCACHE
+NOCYCLE;
+
+
+CREATE SEQUENCE customer_id_seq
+START WITH 1000
+INCREMENT BY 1
+MAXVALUE  9999
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE loan_id_seq
+START WITH 100
+INCREMENT BY 1
+MAXVALUE  999
+NOCACHE
+NOCYCLE;
+
+CREATE SEQUENCE application_id_seq
+START WITH 1000
+INCREMENT BY 1
+MAXVALUE  9999
+NOCACHE
+NOCYCLE;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**Additional Information**
+
+* I have used JDBC to connect my database with my Java code
+* Do the necessary changes in dao code to run successfully in your system 
+
+
+
+
+
+
+
+
+
