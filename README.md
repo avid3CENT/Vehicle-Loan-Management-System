@@ -4,6 +4,8 @@ My first project on creating a common Vehicle Loan Management Application for bo
 
 ***As a Customer***:
 
+![](images/customerdashboard.png)
+
 1.	Home:
   The web homepage includes the login of user, if customer is not registered then user will register first and the login into the website. Without login they can only access the   basic information. 
 2.	Customer-Registration:
@@ -23,8 +25,9 @@ My first project on creating a common Vehicle Loan Management Application for bo
   Once the Loan application is approved by the Manager, the customer can now view his/her loan status along with a PayEMI option to pay EMI online.
   Also, once EMI is paid, the PayEMI button will not be functional for until a month.
 
-
 ***As a Bank Manager***:
+
+![](images/managerdashboard.png)
 
 1.	Loan Application Status window:
    In this window a Manager, can review loan applications along with the applicant details. He or She can also check if a particular loan application is eligible for loan or       not. Also, the manager can approve the loan application from here but not if the not loan application does not meet the eligibility.  
@@ -36,6 +39,8 @@ My first project on creating a common Vehicle Loan Management Application for bo
   Here Manager can view current loans, add loans and update loans as required by the Bank and the market.
 
 ***As a Bank Employee***
+
+![](images/employeedashboard.png)
 
 1.	Loan Application Status window:
   In this window a Staff, can review loan applications along with the applicant details. He or She can also check if a particular loan application is eligible for loan or not.     But Staff has no authorization of Approving a Loan Application.
