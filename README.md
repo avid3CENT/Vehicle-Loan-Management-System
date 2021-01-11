@@ -84,9 +84,9 @@ E= P*R[ ((1+R)^n)/ (((1+R)^n)-1)]
 
 **Technologies used**:
 
-Back-end: Java 8
-Front-end: Java Swing 
-Database: Oracle 11g SQL Plus
+* Back-end: Java 8
+* Front-end: Java Swing 
+* Database: Oracle 11g SQL Plus
 
 **Pre-Requisites to run the application**:
 
